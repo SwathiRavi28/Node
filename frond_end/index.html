@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Mentors</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1></h1>
+        <h2>Mentors</h2>
+        <br>
+        <br>
+
+        <div class="card-deck">
+            <div class="card ">
+                <div class="card-body text-center">
+                    <img class="card-img-top" src="./img1.jpg" alt="Card image">
+                    <div class="card-body">
+                        <h4 class="card-title">Jessy</h4>
+
+                        <a href="#" class="btn btn-primary stretched-link" onclick="sendname('Jessy')">Select
+                            Students</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card ">
+                <div class="card-body text-center">
+                    <img class="card-img-top" src="./img5.jpg" alt="Card image">
+                    <div class="card-body">
+                        <h4 class="card-title">John Doe</h4>
+
+                        <a href="#" class="btn btn-primary stretched-link" onclick="sendname('John Doe')">Select
+                            Students</a>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card ">
+                <div class="card-body text-center">
+                    <img class="card-img-top" src="./img2.jpg" alt="Card image">
+                    <div class="card-body">
+                        <h4 class="card-title">Beata</h4>
+
+                        <a href="#" class="btn btn-primary stretched-link" onclick="sendname('Beata')">Select
+                            Students</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card ">
+                <div class="card-body text-center">
+                    <img class="card-img-top" src="./img4.jpg" alt="Card image">
+                    <div class="card-body">
+                        <h4 class="card-title">Roman</h4>
+
+                        <a href="#" class="btn btn-primary stretched-link" onclick="sendname('Roman')">Select
+                            Students</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </br></br>
+
+    <div class="text-center">
+        <div class="dropdown">
+            <h3>Change Mentor/Student</h3>
+
+            <span>
+                <select name="mentors" id="mentors">
+
+                </select>
+            </span>
+            <span> <select name="students" id="students">
+
+                </select>
+            </span>
+
+        </div>
+    </div>
+    </br>
+    </br>
+    <div class="text-center">
+        <button type="button" class="btn btn-primary" onclick="changementor()">Change</button>
+    </div>
+    <script>
+        function sendname(value1) {
+            var queryString = "?" + value1;
+            window.location.href = "stu.html" + queryString;
+        }
+
+
+
+        function getmentors() {
+            let url = "http://localhost:3000/get-mentors"
+            fetch(url)
+                .then((resp) => {
+                    return resp.json()
+                })
+                .then((data) => {
+                    console.log(data);
+                    let str = "";
+                    let count = 1;
+                    data.result.forEach(element => {
+
+                        str = str + `<option value="${element.name}" id=${count}>${element.name}</option>`
+                        count++;
+                    });
+                    let object = document.getElementById("mentors");
+                    console.log(str)
+
+                    console.log(object)
+                    object.innerHTML = str;
+                })
+        }
+        getmentors();
+
+
+        function getstudents() {
+            let url = "http://localhost:3000/get-students"
+            fetch(url)
+                .then((resp) => {
+                    return resp.json()
+                })
+                .then((data) => {
+                    console.log(data);
+                    let str = "";
+                    let count = 1;
+                    data.result.forEach(element => {
+
+                        str = str + `<option value="${element.name}" id=${count}>${element.name}</option>`
+                        count++;
+                    });
+                    console.log(str)
+                    let object = document.getElementById("students");
+                    console.log(object)
+                    object.innerHTML = str;
+                })
+        }
+        getstudents();
+        var output1, output2;
+        function changementor() {
+            function getOption_mentor() {
+                selectElement = document.querySelector('#mentors');
+
+                output1 = selectElement.value;
+                console.log("men:", output1);
+
+            }
+            function getOption_student() {
+                selectElement = document.querySelector('#students');
+
+                output2 = selectElement.value;
+                console.log("stu:", output2);
+
+            }
+
+
+            function Update1() {
+                console.log("arrive");
+                var data = {
+                    "mentor": output1,
+                    "stu": output2
+                };
+                console.log(data);
+                fetch("http://localhost:3000/change-mentor_student", {
+                    method: 'POST',
+                    body: JSON.stringify(
+                        data),
+
+                    headers: {
+                        "Content-type": "application/json; charset=UTF-8"
+                    }
+                })
+                    .then(response => {
+                        response.json()
+                        if (response.status == 200) {
+                            alert("Successfully Changed");
+                        }
+                        else {
+                            alert("Error occured");
+                        }
+                    })
+            }
+            getOption_mentor()
+            getOption_student()
+            Update1()
+        }
+    </script>
+</body>
+
+</html>
