@@ -10,34 +10,10 @@ dotenv.config();
 const mongoClient = mongodb.MongoClient;
 const objectId = mongodb.ObjectID;
 const port = process.env.PORT || 3000;
-let dbUrl = process.env.DB_URL || "mongodb://127.0.0.1:27017";
+let dbUrl =process.env.DB_URL || "mongodb://127.0.0.1:27017";
 
 app.use(express.json());
 app.use(cors());
-
-app.get("/", async (req, res) => {
-  try {
-    res.send("stu.html")
-  } catch (error) {
-    console.log(error);
-    res.send(500);
-  }
-});
-
-app.get("/get-user/:id", async (req, res) => {
-  try {
-    let client = await mongodb.connect(dbUrl);
-    let db = client.db("studentDetail");
-    let result = await db
-      .collection("mentor")
-      .findOne({ _id: objectId(req.params.id) });
-    res.status(200).json({ result });
-    client.close();
-  } catch (error) {
-    console.log(error);
-    res.send(500);
-  }
-});
 
 app.get("/get-mentors", async (req, res) => {
     try {
@@ -70,7 +46,7 @@ app.get("/get-mentors", async (req, res) => {
       //console.log("entered");
       let client = await mongoClient.connect(dbUrl,{useNewUrlParser: true, useUnifiedTopology: true});
       let db = client.db("studentDetail");
-      let result = await db.collection("student").find( { mentor: null } ).toArray();
+      let result = await db.collection("student").find( { mentor:"" } ).toArray();
       //console.log("res1:",result);
       res.status(200).json({ result });
       client.close();
@@ -137,18 +113,6 @@ app.get("/get-mentors", async (req, res) => {
           res.send(500);
         }
       });
-   
-app.post("/add-user", async (req, res) => {
-  try {
-    let client = await mongodb.connect(dbUrl);
-    let db = client.db("studentDetail");
-    let result = await db.collection("student").insertMany(req.body);
-    res.status(200).json({ message: "USer Created" });
-    client.close();
-  } catch (error) {
-    console.log(error);
-    res.send(500);
-  }
-});
+  
 
 app.listen(port, () => console.log("Your app is running with", port));
