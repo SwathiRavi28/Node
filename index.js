@@ -16,17 +16,14 @@ app.use(express.json());
 app.use(cors());
 
 app.get("/", async (req, res) => {
-  try {
-    let client = await mongodb.connect(dbUrl);
-    let db = client.db("studentDetail");
-    let result = await db.collection("mentor").find().toArray();
-    res.status(200).json({ result });
-    client.close();
-  } catch (error) {
-    console.log(error);
-    res.send(500);
-  }
-});
+    try {
+     res.render("index.html")
+     
+    } catch (error) {
+      console.log(error);
+      res.send(500);
+    }
+  });
 
 app.get("/get-mentors", async (req, res) => {
     try {
