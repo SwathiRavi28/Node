@@ -15,15 +15,6 @@ let dbUrl =process.env.DB_URL || "mongodb://127.0.0.1:27017";
 app.use(express.json());
 app.use(cors());
 
-app.get("/", async (req, res) => {
-    try {
-     res.render("index.html")
-     
-    } catch (error) {
-      console.log(error);
-      res.send(500);
-    }
-  });
 
 app.get("/get-mentors", async (req, res) => {
     try {
